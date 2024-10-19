@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	Brownian Motion| Random Walk Converging to a Brownian Motion
+	</title>
+	<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js">
+	</script>
+	<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js">
+	</script>
+</head>
+
+<body>
+	<center>
+		<div>
+			
+			<div>
+				<canvas id="lineChartID-display-none" style="max-height:300px">
+				</canvas>
+                <input id="steps" type="number" min="2" max="100000" step="1" value="2" />
+                <button id="enter">Enter!</button>
+                
+			</div>
+            
+		</div>
+	</center>
+	<script>
+        step=document.querySelector("#steps")
+        enter=document.querySelector("#enter")
+        m=step.max
+        
+  steps=Array(m-1)
+  for(i=1;i<m;i++)
+  {
+    steps[i-1]=(Math.floor(Math.random()*2)-0.5)*2
+  }
+        chart= new Chart($("#lineChartID-display-none"),{
+			type: "line",
+            data: {
+				labels: [],
+                datasets: [{
+					label: "Path",
+					data: [],
+                    borderColor: 'blue',
+                    pointRadius:0,
+                    borderWidth: 1,
+					fill: false,
+					tension: 0.0
+				}]
+			},
+			options: {   
+                plugins: {
+            title: {
+                display: true,
+                text: 'Random Walk Converging to a Brownian Motion',
+                color: 'black',
+                font: {
+                    weight: 'bold',
+                    size: 24
+                }
+            }
+        },             
+				scales: {
+					x: { 
+						display: false
+					},
+					y: {
+						beginAtZero: true
+					}
+				},
+                /*title: {
+                display: true,
+                text: "Random Walk Converging to a Brownian Motion",
+                fontSize: 20
+                }*/
+			}
+		})
+
+function draw()
+{
+    simulate(step.value)
+}
+
+function simulate(n){
+    xVal=Array(n)
+    yVal=Array(n)
+    
+  xVal[0]=0
+  yVal[0]=0
+
+  for(i=1;i<n;i++)
+  {
+    xVal[i]=i/(n-1)
+    yVal[i]= yVal[i-1] + steps[i-1]/n
+  }
+
+  chart.data.labels=xVal
+  chart.data.datasets[0].data=yVal
+  chart.update()
+}
+    enter.addEventListener("click",draw)
+    step.addEventListener("change",draw)
+</script>
+</body>
+
+</html>
